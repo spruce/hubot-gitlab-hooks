@@ -85,22 +85,25 @@ module.exports = (robot) ->
             message = "#{bold(hook.user_name)} pushed a new branch (#{bold(branch)}) to #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
           else
             message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to #{bold(branch)} in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage + '/compare/' + hook.before.substr(0,9) + '...' + hook.after.substr(0,9))})"
-            for i in [0...hook.commits]
-              merger = ">> " + hook.commits[i].message
-            message += merger.join "\r\n"
+            merger = []
+            for i in [0...hook.commits.length]
+              merger[i] = ">> Commit " + (i+1) + ": " + hook.commits[i].message
+            message += "\r\n" + merger.join "\r\n"
           robot.send user, message
         # not code? must be a something good!
         else
           switch hook.object_kind
             when "issue"
-              text = "Issue #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.action}) at #{hook.object_attributes.url}"
-              if hook.object_attributes.description
-                # split describtion on \r\n so that It can add >> to every line
-                splitted = hook.object_attributes.description.split  "\r\n"
-                for i in [0...splitted.length]
-                  splitted[i] = ">> " + splitted[i]
-                text += "\r\n" + splitted.join "\r\n"
-              robot.send user, text
+              unless hook.object_attributes.action == "update"
+              # for now we don't trigger on update because on manual close it triggers close and update
+                text = "Issue #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.action}) at #{hook.object_attributes.url}"
+                if hook.object_attributes.description
+                  # split describtion on \r\n so that It can add >> to every line
+                  splitted = hook.object_attributes.description.split  "\r\n"
+                  for i in [0...splitted.length]
+                    splitted[i] = ">> " + splitted[i]
+                  text += "\r\n" + splitted.join "\r\n"
+                robot.send user, text
             when "merge_request"
               robot.send user, "Merge Request #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.state}) between #{bold(hook.object_attributes.source_branch)} and #{bold(hook.object_attributes.target_branch)} \n>> #{hook.object_attributes.description}"
 
