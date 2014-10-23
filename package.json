@@ -1,39 +1,32 @@
 {
   "name": "hubot-gitlab-hooks",
   "description": "Hubot Script for providing webhooks for Gitlab",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "Felix Fichte <dev@spruce.de>",
   "license": "MIT",
-
   "keywords": [
     "hubot",
     "hubot-scripts",
     "gitlab",
     "hubot-gitlab"
   ],
-
   "repository": {
     "type": "git",
     "url": "git://github.com/spruce/hubot-gitlab-hooks.git"
   },
-
   "bugs": {
     "url": "https://github.com/spruce/hubot-gitlab-hooks/issues"
   },
-
   "dependencies": {
     "coffee-script": "~1.6"
   },
-
   "devDependencies": {
     "mocha": "*",
     "chai": "*",
     "sinon-chai": "*",
     "sinon": "*"
   },
-
   "main": "index.coffee",
-
   "scripts": {
     "test": "script/test"
   }
