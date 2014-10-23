@@ -23,7 +23,7 @@
 #   /gitlab/web
 #
 # Author:
-#   omribahumi
+#   omribahumi, spruce
 
 url = require 'url'
 querystring = require 'querystring'
@@ -79,16 +79,29 @@ module.exports = (robot) ->
         message = ""
         # is it code being pushed?
         if hook.ref
-          branch = hook.ref.split("/")[2..].join("/")
-          # if the ref before the commit is 00000, this is a new branch
-          if /^0+$/.test(hook.before)
-            message = "#{bold(hook.user_name)} pushed a new branch (#{bold(branch)}) to #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+          # should look for a tag push where the ref starts with refs/tags
+          if /^refs\/tags/.test hook.ref
+            tag = hook.ref.split("/")[2..].join("/")
+            #this is actually a tag being pushed
+            if /^0+$/.test hook.before
+              message = "#{bold(hook.user_name)} pushed a new tag (#{bold(tag)}) to #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+            else if if /^0+$/.test hook.after
+              message = "#{bold(hook.user_name)} removed a tag (#{bold(tag)}) from #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+            else
+              message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to tag (#{bold(tag)}) in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
           else
-            message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to #{bold(branch)} in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage + '/compare/' + hook.before.substr(0,9) + '...' + hook.after.substr(0,9))})"
-            merger = []
-            for i in [0...hook.commits.length]
-              merger[i] = ">> Commit " + (i+1) + ": " + hook.commits[i].message
-            message += "\r\n" + merger.join "\r\n"
+            branch = hook.ref.split("/")[2..].join("/")
+            # if the ref before the commit is 00000, this is a new branch
+            if /^0+$/.test(hook.before)
+              message = "#{bold(hook.user_name)} pushed a new branch (#{bold(branch)}) to #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+            else if /^0+$/.test(hook.after)
+              message = "#{bold(hook.user_name)} deleted a branch (#{bold(branch)}) from #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+            else
+              message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to #{bold(branch)} in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage + '/compare/' + hook.before.substr(0,9) + '...' + hook.after.substr(0,9))})"
+              merger = []
+              for i in [0...hook.commits.length]
+                merger[i] = ">> Commit " + (i+1) + ": " + hook.commits[i].message
+              message += "\r\n" + merger.join "\r\n"
           robot.send user, message
         # not code? must be a something good!
         else
