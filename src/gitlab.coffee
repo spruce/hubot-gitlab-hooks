@@ -85,7 +85,7 @@ module.exports = (robot) ->
             #this is actually a tag being pushed
             if /^0+$/.test hook.before
               message = "#{bold(hook.user_name)} pushed a new tag (#{bold(tag)}) to #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
-            else if if /^0+$/.test hook.after
+            else if /^0+$/.test hook.after
               message = "#{bold(hook.user_name)} removed a tag (#{bold(tag)}) from #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
             else
               message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to tag (#{bold(tag)}) in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
