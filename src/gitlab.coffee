@@ -8,12 +8,16 @@
 # Configuration:
 #   GITLAB_CHANNEL
 #   GITLAB_DEBUG
+#   GITLAB_BRANCHES
 #
 #   Put http://<HUBOT_URL>:<PORT>/gitlab/system as your system hook
 #   Put http://<HUBOT_URL>:<PORT>/gitlab/web as your web hook (per repository)
 #   You can also append "?targets=%23room1,%23room2" to the URL to control the
 #   message destination.  Using the "target" parameter to override the 
 #   GITLAB_CHANNEL configuration value.
+#   You can also append "?branches=master,deve" to the URL to control the
+#   message destination.  Using the "target" parameter to override the 
+#   GITLAB_BRANCHES configuration value.
 #
 # Commands:
 #   None
@@ -33,6 +37,9 @@ querystring = require 'querystring'
 module.exports = (robot) ->
   gitlabChannel = process.env.GITLAB_CHANNEL or "#gitlab"
   debug = process.env.GITLAB_DEBUG?
+  branches = ['all']
+  if process.env.GITLAB_BRANCHES?
+    branches = process.env.GITLAB_BRANCHES.split ','
 
   if robot.adapter.constructor.name is 'IrcBot'
     bold = (text) ->
@@ -59,6 +66,8 @@ module.exports = (robot) ->
     user = {}
     user.room = if query.targets then query.targets else gitlabChannel
     user.type = query.type if query.type
+    if query.branches
+      branches = query.branches.split ','
 
     switch type
       when "system"
@@ -92,16 +101,17 @@ module.exports = (robot) ->
           else
             branch = hook.ref.split("/")[2..].join("/")
             # if the ref before the commit is 00000, this is a new branch
-            if /^0+$/.test(hook.before)
-              message = "#{bold(hook.user_name)} pushed a new branch (#{bold(branch)}) to #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
-            else if /^0+$/.test(hook.after)
-              message = "#{bold(hook.user_name)} deleted a branch (#{bold(branch)}) from #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
-            else
-              message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to #{bold(branch)} in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage + '/compare/' + hook.before.substr(0,9) + '...' + hook.after.substr(0,9))})"
-              merger = []
-              for i in [0...hook.commits.length]
-                merger[i] = ">> Commit " + (i+1) + ": " + hook.commits[i].message
-              message += "\r\n" + merger.join "\r\n"
+            if branch in branches or 'all' in branches
+              if /^0+$/.test(hook.before)
+                message = "#{bold(hook.user_name)} pushed a new branch (#{bold(branch)}) to #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+              else if /^0+$/.test(hook.after)
+                message = "#{bold(hook.user_name)} deleted a branch (#{bold(branch)}) from #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+              else
+                message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to #{bold(branch)} in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage + '/compare/' + hook.before.substr(0,9) + '...' + hook.after.substr(0,9))})"
+                merger = []
+                for i in [0...hook.commits.length]
+                  merger[i] = ">> Commit " + (i+1) + ": " + hook.commits[i].message
+                message += "\r\n" + merger.join "\r\n"
           robot.send user, message
         # not code? must be a something good!
         else
@@ -122,8 +132,9 @@ module.exports = (robot) ->
 
   robot.router.post "/gitlab/system", (req, res) ->
     handler "system", req, res
-    res.end ""
+    res.end "OK"
 
   robot.router.post "/gitlab/web", (req, res) ->
     handler "web", req, res
-    res.end ""
+    res.end "OK"
+
