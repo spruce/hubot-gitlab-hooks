@@ -95,4 +95,4 @@ http://hubot.mydomain.com/gitlab/web?branches=develop,master
 
 ## License
 
-hubot-gitlab-hooks is [MIT Licensed](https://github.com/ember-cli/ember-cli/blob/master/LICENSE.md).
+hubot-gitlab-hooks is [MIT Licensed](https://github.com/spruce/hubot-gitlab-hooks/blob/master/LICENSE).
