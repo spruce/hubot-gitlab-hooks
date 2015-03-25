@@ -1,7 +1,7 @@
 {
   "name": "hubot-gitlab-hooks",
   "description": "Hubot Script for providing webhooks for Gitlab",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Felix Fichte <dev@spruce.de>",
   "license": "MIT",
   "keywords": [
