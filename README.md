@@ -58,6 +58,15 @@ Note: all push events are pushed to hubot but then the not required ones are dis
 GITLAB_BRANCHES="master,develop"
 ```
 
+#####GITLAB_SHOW_COMMITS_LIST
+
+If the commits should be listed when code is pushed.
+
+
+```
+GITLAB_SHOW_COMMITS_LIST=0
+```
+
 
 ##Query Params
 

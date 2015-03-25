@@ -36,6 +36,7 @@ querystring = require 'querystring'
 
 module.exports = (robot) ->
   gitlabChannel = process.env.GITLAB_CHANNEL or "#gitlab"
+  showCommitsList = process.env.GITLAB_SHOW_COMMITS_LIST or "1"
   debug = process.env.GITLAB_DEBUG?
   branches = ['all']
   if process.env.GITLAB_BRANCHES?
@@ -108,10 +109,11 @@ module.exports = (robot) ->
                 message = "#{bold(hook.user_name)} deleted a branch (#{bold(branch)}) from #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
               else
                 message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to #{bold(branch)} in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage + '/compare/' + hook.before.substr(0,9) + '...' + hook.after.substr(0,9))})"
-                merger = []
-                for i in [0...hook.commits.length]
-                  merger[i] = ">> Commit " + (i+1) + ": " + hook.commits[i].message
-                message += "\r\n" + merger.join "\r\n"
+                if showCommitsList == "1"
+                  merger = []
+                  for i in [0...hook.commits.length]
+                    merger[i] = ">> Commit " + (i+1) + ": " + hook.commits[i].message
+                  message += "\r\n" + merger.join "\r\n"
           robot.send user, message
         # not code? must be a something good!
         else
