@@ -37,6 +37,7 @@ querystring = require 'querystring'
 module.exports = (robot) ->
   gitlabChannel = process.env.GITLAB_CHANNEL or "#gitlab"
   showCommitsList = process.env.GITLAB_SHOW_COMMITS_LIST or "1"
+  showMergeDesc = process.env.GITLAB_SHOW_MERGE_DESCRIPTION or "1"
   debug = process.env.GITLAB_DEBUG?
   branches = ['all']
   if process.env.GITLAB_BRANCHES?
@@ -130,7 +131,10 @@ module.exports = (robot) ->
                   text += "\r\n" + splitted.join "\r\n"
                 robot.send user, text
             when "merge_request"
-              robot.send user, "Merge Request #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.state}) between #{bold(hook.object_attributes.source_branch)} and #{bold(hook.object_attributes.target_branch)} \n>> #{hook.object_attributes.description}"
+              if showMergeDesc == "1"  
+                robot.send user, "Merge Request #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.state}) between #{bold(hook.object_attributes.source_branch)} and #{bold(hook.object_attributes.target_branch)} \n>> #{hook.object_attributes.description}"
+              else
+                robot.send user, "Merge Request #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.state}) between #{bold(hook.object_attributes.source_branch)} and #{bold(hook.object_attributes.target_branch)}"
 
   robot.router.post "/gitlab/system", (req, res) ->
     handler "system", req, res
