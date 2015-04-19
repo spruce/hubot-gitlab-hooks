@@ -9,6 +9,8 @@
 #   GITLAB_CHANNEL
 #   GITLAB_DEBUG
 #   GITLAB_BRANCHES
+#   GITLAB_SHOW_COMMITS_LISTG
+#   GITLAB_SHOW_MERGE_DESCRIPTION
 #
 #   Put http://<HUBOT_URL>:<PORT>/gitlab/system as your system hook
 #   Put http://<HUBOT_URL>:<PORT>/gitlab/web as your web hook (per repository)
