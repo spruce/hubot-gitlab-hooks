@@ -67,6 +67,13 @@ If the commits should be listed when code is pushed.
 GITLAB_SHOW_COMMITS_LIST=0
 ```
 
+#####GITLAB_SHOW_MERGE_DESCRIPTION
+
+If the the merge request hook should also show the description. Useful for adapters like IRC where long descriptions can spam the channel
+
+```
+GITLAB_SHOW_MERGE_DESCRIPTION=0
+```
 
 ##Query Params
 
