@@ -101,7 +101,10 @@ module.exports = (robot) ->
             else if /^0+$/.test hook.after
               message = "#{bold(hook.user_name)} removed a tag (#{bold(tag)}) from #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
             else
-              message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to tag (#{bold(tag)}) in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+              if hook.total_commits_count == 1
+                message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commit to tag (#{bold(tag)}) in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
+              else
+                message = "#{bold(hook.user_name)} pushed #{bold(hook.total_commits_count)} commits to tag (#{bold(tag)}) in #{bold(hook.repository.name)} (#{underline(hook.repository.homepage)})"
           else
             branch = hook.ref.split("/")[2..].join("/")
             # if the ref before the commit is 00000, this is a new branch
