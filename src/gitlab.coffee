@@ -115,7 +115,7 @@ module.exports = (robot) ->
                 if showCommitsList == "1"
                   merger = []
                   for i in [0...hook.commits.length]
-                    merger[i] = ">> Commit " + (i+1) + ": " + hook.commits[i].message
+                    merger[i] = "> " + hook.commits[i].id.slice(0,7) + ": " + hook.commits[i].message.replace /\n.*$/gm, ''
                   message += "\r\n" + merger.join "\r\n"
           robot.send user, message
         # not code? must be a something good!
