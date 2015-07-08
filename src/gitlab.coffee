@@ -119,6 +119,13 @@ module.exports = (robot) ->
                   merger = []
                   for i in [0...hook.commits.length]
                     merger[i] = "> " + hook.commits[i].id.slice(0,7) + ": " + hook.commits[i].message.replace /\n.*$/gm, ''
+                    robot.emit "gitlab-commit", {
+                        user: user,
+                        repo: hook.repository.name,
+                        message: hook.commits[i].message,
+                        commit: hook.commits[i]
+                      }
+
                   message += "\r\n" + merger.join "\r\n"
           robot.send user, message
         # not code? must be a something good!
