@@ -43,6 +43,12 @@ For HipChat
 GITLAB_CHANNEL="xxxxxx_roomName@conf.hipchat.com"
 ```
 
+For Let's Chat
+
+```
+GITLAB_CHANNEL="40b29e6ef217d12b00b8feff,86d1ce6ef217d61b00b8ab12"
+```
+
 #####GITLAB_DEBUG
 
 Switches on debugging mode. Simply outputs more stuff :)
@@ -52,7 +58,7 @@ Switches on debugging mode. Simply outputs more stuff :)
 
 Which branches should be pushed to chat.
 
-Note: all push events are pushed to hubot but then the not required ones are discarded.
+Note: All push events are pushed to hubot but then the not required ones are discarded. If this is unset, all branch activity in the repo will be pushed to chat.
 
 ```
 GITLAB_BRANCHES="master,develop"
