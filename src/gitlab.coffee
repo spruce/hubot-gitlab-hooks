@@ -168,13 +168,8 @@ module.exports = (robot) ->
   robot.respond /rebuild ?([0-9]+)/i, (res) ->
     project_id = res.match[1].trim()
 
-    data = JSON.stringify({
-      token: "3830d6932309cff3065c76d940941c",
-      ref: "master"
-    })
-    robot.http("https://gitlab.example.com/api/v3/projects/"+project_id+"/trigger/builds")
-      .header('Content-Type', 'application/json')
-      .post(data) (err, res, body) ->
+    robot.http("https://gitlab.example.com/api/v3/projects/"+project_id+"/trigger/builds?token=3830d6932309cff3065c76d940941c&ref=master")
+      .get() (err, res, body) ->
         user = {}
         user.room = gitlabChannel
         robot.send user, "Got response: "+res+body
