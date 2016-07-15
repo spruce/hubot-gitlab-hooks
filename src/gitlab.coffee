@@ -168,10 +168,7 @@ module.exports = (robot) ->
   robot.respond /rebuild ?([0-9]+)/i, (res) ->
     project_id = res.match[1].trim()
 
-    res.send "Going to try and rebild project "+project_id
-
     robot.http("http://code.cropcircle.io/api/v3/projects/"+project_id+"/trigger/builds?token=3830d6932309cff3065c76d940941c&ref=master")
-      .get() (err, res, body) ->
-        res.send "Got: "+body
-
+      .get() (err, result, body) ->
+        console.log result
 
