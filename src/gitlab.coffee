@@ -165,7 +165,7 @@ module.exports = (robot) ->
     handler "web", req, res
     res.end "OK"
 
-  growbot.respond /rebuild ?([0-9]+)/i, (res) ->
+  robot.respond /rebuild ?([0-9]+)/i, (res) ->
     project_id = res.match[1].trim()
 
     data = JSON.stringify({
