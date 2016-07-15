@@ -169,7 +169,7 @@ module.exports = (robot) ->
     project_id = res.match[1].trim()
 
     data = JSON.stringify({
-      token: 3830d6932309cff3065c76d940941c,
+      token: "3830d6932309cff3065c76d940941c",
       ref: "master"
     })
     robot.http("https://gitlab.example.com/api/v3/projects/"+project_id+"/trigger/builds")
