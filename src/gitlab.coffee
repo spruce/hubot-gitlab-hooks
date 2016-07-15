@@ -74,7 +74,7 @@ module.exports = (robot) ->
       branches = query.branches.split ','
 
     if hook.object_kind == "build"
-      robot.send user, "Build of "+hook.project_name+' id: '+hook.project_id+' ref: '+hook.ref+' stage: ' + hook.build_stage + ' status: ' + hook.build_status + '. Time: ' + hook.build_duration
+      robot.send user, "Build of "+hook.project_name+' id: '+hook.project_id+' ref: '+hook.ref+' name: '+hook.build_name+' stage: ' + hook.build_stage + ' status: ' + hook.build_status + '. Time: ' + hook.build_duration
 
     switch type
       when "system"
