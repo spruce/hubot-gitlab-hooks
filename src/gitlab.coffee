@@ -176,7 +176,7 @@ module.exports = (robot) ->
       .header('Content-Type', 'application/json')
       .post(data) (err, res, body) ->
         user = {}
-        user.room = if query.targets then query.targets else gitlabChannel
+        user.room = gitlabChannel
         user.type = query.type if query.type
         robot.send user, "Got response: "+res+body
 
