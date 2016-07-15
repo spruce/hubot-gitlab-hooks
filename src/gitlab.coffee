@@ -73,6 +73,9 @@ module.exports = (robot) ->
     if query.branches
       branches = query.branches.split ','
 
+    if hook.object_kind == "build"
+      robot.send user, "Build of "+hook.project_name+' id: '+hook.project_id+' stage: ' + hook.build_stage + ' status: ' + hook.build_status + '. Time: ' + hook.build_duration
+
     switch type
       when "system"
         switch hook.event_name
@@ -161,4 +164,20 @@ module.exports = (robot) ->
   robot.router.post "/gitlab/web", (req, res) ->
     handler "web", req, res
     res.end "OK"
+
+  growbot.respond /rebuild ?([0-9]+)/i, (res) ->
+    project_id = res.match[1].trim()
+
+    data = JSON.stringify({
+      token: 3830d6932309cff3065c76d940941c,
+      ref: "master"
+    })
+    robot.http("https://gitlab.example.com/api/v3/projects/"+project_id+"/trigger/builds")
+      .header('Content-Type', 'application/json')
+      .post(data) (err, res, body) ->
+        user = {}
+        user.room = if query.targets then query.targets else gitlabChannel
+        user.type = query.type if query.type
+        robot.send user, "Got response: "+res+body
+
 
