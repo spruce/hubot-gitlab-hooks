@@ -168,10 +168,10 @@ module.exports = (robot) ->
   robot.respond /rebuild ?([0-9]+)/i, (res) ->
     project_id = res.match[1].trim()
 
-    robot.http("https://gitlab.example.com/api/v3/projects/"+project_id+"/trigger/builds?token=3830d6932309cff3065c76d940941c&ref=master")
+    res.send "Going to try and rebild project "+project_id
+
+    robot.http("http://code.cropcircle.io/api/v3/projects/"+project_id+"/trigger/builds?token=3830d6932309cff3065c76d940941c&ref=master")
       .get() (err, res, body) ->
-        user = {}
-        user.room = gitlabChannel
-        robot.send user, "Got response: "+res+body
+        res.send "Got: "+body
 
 
