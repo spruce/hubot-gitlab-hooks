@@ -135,7 +135,7 @@ module.exports = (robot) ->
         else
           switch hook.object_kind
             when "wiki_page"
-              text = "Wiki - #{bold(hook.object_attributes.title)}: #{hook.object_attributes.action} at #{hook.object_attributes.url}"
+              text = "Wiki - #{bold(hook.object_attributes.title)}: #{hook.object_attributes.action} by #{hook.user.name} at #{hook.object_attributes.url}"
               robot.send user, text
             when "issue"
               unless hook.object_attributes.action == "update"
