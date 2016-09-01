@@ -134,6 +134,14 @@ module.exports = (robot) ->
         # not code? must be a something good!
         else
           switch hook.object_kind
+            when "wiki_page"
+              text = "Wiki - {bold(hook.object_attributes.title)}: #{hook.object_attributes.action} at #{hook.object_attributes.url}"
+
+              splitted = hook.object_attributes.content.split  "\r\n"
+              for i in [0...splitted.length]
+                splitted[i] = ">> " + splitted[i]
+              text += "\r\n" + splitted.join "\r\n"
+              robot.send user, text
             when "issue"
               unless hook.object_attributes.action == "update"
               # for now we don't trigger on update because on manual close it triggers close and update
