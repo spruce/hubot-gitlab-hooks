@@ -6,6 +6,7 @@
 #   "querystring" : ""
 #
 # Configuration:
+#   GITLAB_URL
 #   GITLAB_CHANNEL
 #   GITLAB_DEBUG
 #   GITLAB_BRANCHES
@@ -177,7 +178,7 @@ module.exports = (robot) ->
         ref: ref
 
     })
-    robot.http("http://code.cropcircle.io/api/v3/projects/"+project_id+"/trigger/builds")
+    robot.http(GITLAB_URL+"/api/v3/projects/"+project_id+"/trigger/builds")
         .header('Content-Type', 'application/json')
         .post(data) (err, res, body) ->
           # your code here    

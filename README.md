@@ -35,6 +35,10 @@ Via Environment- variables or via query params:
 
 #####GITLAB_CHANNEL
 
+The URL of your GitLab installation: http://git.example.com/
+
+#####GITLAB_CHANNEL
+
 The Room to which the gitlab messages get published. Use like this:
 
 For HipChat
