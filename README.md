@@ -33,7 +33,7 @@ Via Environment- variables or via query params:
 
 ##ENV
 
-#####GITLAB_CHANNEL
+#####GITLAB_URL
 
 The URL of your GitLab installation: http://git.example.com/
 
