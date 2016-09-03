@@ -73,6 +73,9 @@ module.exports = (robot) ->
     if query.branches
       branches = query.branches.split ','
 
+    if hook.object_kind == "build"
+      robot.send user, "Build of "+hook.project_name+' id: '+hook.project_id+' ref: '+hook.ref+' name: '+hook.build_name+' stage: ' + hook.build_stage + ' status: ' + hook.build_status + '. Time: ' + hook.build_duration
+
     switch type
       when "system"
         switch hook.event_name
@@ -131,6 +134,9 @@ module.exports = (robot) ->
         # not code? must be a something good!
         else
           switch hook.object_kind
+            when "wiki_page"
+              text = "#{hook.user.name} did #{hook.object_attributes.action} wiki page: #{bold(hook.object_attributes.title)} at #{hook.object_attributes.url}"
+              robot.send user, text
             when "issue"
               unless hook.object_attributes.action == "update"
               # for now we don't trigger on update because on manual close it triggers close and update
@@ -162,3 +168,16 @@ module.exports = (robot) ->
     handler "web", req, res
     res.end "OK"
 
+  robot.respond /rebuild ?([0-9]+) ?([\w.\-]+)/i, (res) ->
+    project_id = res.match[1].trim()
+    ref = res.match[2].trim()
+
+    data = JSON.stringify({
+        token: process.env.GITLAB_TRIGGER_TOKEN
+        ref: ref
+
+    })
+    robot.http("http://code.cropcircle.io/api/v3/projects/"+project_id+"/trigger/builds")
+        .header('Content-Type', 'application/json')
+        .post(data) (err, res, body) ->
+          # your code here    
