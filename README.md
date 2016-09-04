@@ -33,6 +33,10 @@ Via Environment- variables or via query params:
 
 ##ENV
 
+#####GITLAB_URL
+
+The URL of your GitLab installation: http://git.example.com/
+
 #####GITLAB_CHANNEL
 
 The Room to which the gitlab messages get published. Use like this:
