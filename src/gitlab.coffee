@@ -166,7 +166,7 @@ module.exports = (robot) ->
                   splitted = strip_content(hook.object_attributes.description).split  "\r\n"
                   for i in [0...splitted.length]
                     splitted[i] = "> " + splitted[i]
-                  text += "\r\n" + splitted.join "\r\n
+                  text += "\r\n" + splitted.join "\r\n"
                   robot.send user, text
                 else
                   robot.send user, "Merge Request #{bold(hook.object_attributes.iid)}: #{hook.user.username} #{hook.object_attributes.action}  #{hook.object_attributes.title} (#{hook.object_attributes.state}) between #{bold(hook.object_attributes.source_branch)} and #{bold(hook.object_attributes.target_branch)} at #{bold(hook.object_attributes.url)}"
