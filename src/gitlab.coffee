@@ -175,9 +175,9 @@ module.exports = (robot) ->
                 when "Commit"
                   text = "Commit #{bold(hook.object_attributes.commit_id.substr(0,9))}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
                 when "MergeRequest"
-                  text = "Merge Requst #{bold(hook.merge_request.id)}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
+                  text = "Merge Requst #{bold(hook.merge_request.iid)}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
                 when "Issue"
-                  text = "Issue #{bold(hook.issue.id)}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
+                  text = "Issue #{bold(hook.issue.iid)}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
                 when "Snippet"
                   text = "Snippet #{bold(hook.snippet.id)}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
               robot.send user, text
