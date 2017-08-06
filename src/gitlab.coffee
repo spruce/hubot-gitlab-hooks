@@ -16,10 +16,10 @@
 #   Put http://<HUBOT_URL>:<PORT>/gitlab/system as your system hook
 #   Put http://<HUBOT_URL>:<PORT>/gitlab/web as your web hook (per repository)
 #   You can also append "?targets=%23room1,%23room2" to the URL to control the
-#   message destination.  Using the "target" parameter to override the 
+#   message destination.  Using the "target" parameter to override the
 #   GITLAB_CHANNEL configuration value.
 #   You can also append "?branches=master,deve" to the URL to control the
-#   message destination.  Using the "target" parameter to override the 
+#   message destination.  Using the "target" parameter to override the
 #   GITLAB_BRANCHES configuration value.
 #
 # Commands:
@@ -59,6 +59,14 @@ module.exports = (robot) ->
 
   trim_commit_url = (url) ->
     url.replace(/(\/[0-9a-f]{9})[0-9a-f]+$/, '$1')
+
+  strip_content = (str) ->
+    str.split(/\n/).filter (line, index) ->
+      # Remove the \n first so we have content only
+      line.length != 0
+    .filter (_line, _index) ->
+      _index <= 4
+    .join("\n")
 
   handler = (type, req, res) ->
     query = querystring.parse(url.parse(req.url).query)
@@ -144,22 +152,33 @@ module.exports = (robot) ->
                 text = "Issue #{bold(hook.object_attributes.iid)}: #{hook.object_attributes.title} (#{hook.object_attributes.action}) at #{hook.object_attributes.url}"
                 if hook.object_attributes.description
                   # split describtion on \r\n so that It can add >> to every line
-                  splitted = hook.object_attributes.description.split  "\r\n"
+                  splitted = strip_content(hook.object_attributes.description).split  "\r\n"
                   for i in [0...splitted.length]
                     splitted[i] = ">> " + splitted[i]
                   text += "\r\n" + splitted.join "\r\n"
                 robot.send user, text
             when "merge_request"
               unless hook.object_attributes.action == "update"
-                if showMergeDesc == "1"  
+                if showMergeDesc == "1"
                   text = "Merge Request #{bold(hook.object_attributes.iid)}: #{hook.user.username} #{hook.object_attributes.action}  #{hook.object_attributes.title} between #{bold(hook.object_attributes.source_branch)} and #{bold(hook.object_attributes.target_branch)} at #{bold(hook.object_attributes.url)}\n"
-                  splitted = hook.object_attributes.description.split  "\r\n"
+                  splitted = strip_content(hook.object_attributes.description).split  "\r\n"
                   for i in [0...splitted.length]
                     splitted[i] = "> " + splitted[i]
                   text += "\r\n" + splitted.join "\r\n"
                   robot.send user, text
                 else
                   robot.send user, "Merge Request #{bold(hook.object_attributes.iid)}: #{hook.user.username} #{hook.object_attributes.action}  #{hook.object_attributes.title} (#{hook.object_attributes.state}) between #{bold(hook.object_attributes.source_branch)} and #{bold(hook.object_attributes.target_branch)} at #{bold(hook.object_attributes.url)}"
+            when "note"
+              switch hook.object_attributes.noteable_type
+                when "Commit"
+                  text = "Commit #{bold(hook.object_attributes.commit_id.substr(0,9))}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
+                when "MergeRequest"
+                  text = "Merge Requst #{bold(hook.merge_request.iid)}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
+                when "Issue"
+                  text = "Issue #{bold(hook.issue.iid)}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
+                when "Snippet"
+                  text = "Snippet #{bold(hook.snippet.id)}: has been updated by #{bold(hook.user.name)} at #{bold(hook.object_attributes.url)}\r\n>> #{strip_content(hook.object_attributes.note)}"
+              robot.send user, text
 
   robot.router.post "/gitlab/system", (req, res) ->
     handler "system", req, res
@@ -181,4 +200,4 @@ module.exports = (robot) ->
     robot.http(GITLAB_URL+"/api/v3/projects/"+project_id+"/trigger/builds")
         .header('Content-Type', 'application/json')
         .post(data) (err, res, body) ->
-          # your code here    
+          # your code here
