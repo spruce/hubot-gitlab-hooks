@@ -63,11 +63,9 @@ module.exports = (robot) ->
   strip_content = (str) ->
     str.split(/\n/).filter (line, index) ->
       # Remove the \n first so we have content only
-      if line.length != 0
-          line
+      line.length != 0
     .filter (_line, _index) ->
-      if _index <= 4
-        _line
+      _index <= 4
     .join("\n")
 
   handler = (type, req, res) ->
