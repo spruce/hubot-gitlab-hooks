@@ -24,20 +24,20 @@ Put http://<HUBOT_URL>/gitlab/web
 ```
 
 
-#Configuration
+# Configuration
 
 There are different options for configuration:
 
 Via Environment- variables or via query params:
 
 
-##ENV
+## ENV
 
-#####GITLAB_URL
+##### GITLAB_URL
 
 The URL of your GitLab installation: http://git.example.com/
 
-#####GITLAB_CHANNEL
+##### GITLAB_CHANNEL
 
 The Room to which the gitlab messages get published. Use like this:
 
@@ -53,12 +53,12 @@ For Let's Chat
 GITLAB_CHANNEL="40b29e6ef217d12b00b8feff,86d1ce6ef217d61b00b8ab12"
 ```
 
-#####GITLAB_DEBUG
+##### GITLAB_DEBUG
 
 Switches on debugging mode. Simply outputs more stuff :)
 
 
-#####GITLAB_BRANCHES
+##### GITLAB_BRANCHES
 
 Which branches should be pushed to chat.
 
@@ -68,7 +68,7 @@ Note: All push events are pushed to hubot but then the not required ones are dis
 GITLAB_BRANCHES="master,develop"
 ```
 
-#####GITLAB_SHOW_COMMITS_LIST
+##### GITLAB_SHOW_COMMITS_LIST
 
 If the commits should be listed when code is pushed.
 
@@ -77,7 +77,7 @@ If the commits should be listed when code is pushed.
 GITLAB_SHOW_COMMITS_LIST=0
 ```
 
-#####GITLAB_SHOW_MERGE_DESCRIPTION
+##### GITLAB_SHOW_MERGE_DESCRIPTION
 
 If the the merge request hook should also show the description. Useful for adapters like IRC where long descriptions can spam the channel
 
@@ -85,9 +85,9 @@ If the the merge request hook should also show the description. Useful for adapt
 GITLAB_SHOW_MERGE_DESCRIPTION=0
 ```
 
-##Query Params
+## Query Params
 
-#####targets
+##### targets
 
 Same as ENV GITLAB_CHANNEL
 
@@ -95,19 +95,19 @@ Same as ENV GITLAB_CHANNEL
 ?targets=%23room1,%23room2
 ```
 
-######Sampleurl
+###### Sampleurl
 
 ```
 http://hubot.mydomain.com/gitlab/web?targets=%23room1,%23room2
 ```
 
-#####branches
+##### branches
 
 ```
 ?branches=master,develop
 ```
 
-######Sampleurl
+###### Sampleurl
 
 ```
 http://hubot.mydomain.com/gitlab/web?branches=develop,master
